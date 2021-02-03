@@ -41,10 +41,10 @@ export function AuthPage() {
               {/* start:: Aside content */}
               <div className="flex-column-fluid d-flex flex-column justify-content-center">
                 <h3 className="font-size-h1 mb-5 text-white">
-                  Welcome to {CONST.appInfo.name}!
+                  Welcome to {CONST.APP_INFO.name}!
                 </h3>
                 <p className="font-weight-lighter text-white opacity-80">
-                  {CONST.appInfo.description}
+                  {CONST.APP_INFO.description}
                 </p>
               </div>
               {/* end:: Aside content */}
@@ -52,13 +52,13 @@ export function AuthPage() {
               {/* start:: Aside footer for desktop */}
               <div className="d-none flex-column-auto d-lg-flex justify-content-between mt-10">
                 <div className="opacity-70 font-weight-bold	text-white">
-                  &copy; 2020 {CONST.appInfo.name}
+                  &copy; 2020 {CONST.APP_INFO.name}
                 </div>
                 <div className="d-flex">
                   <a
                     rel="noopener noreferrer"
                     target="_blank"
-                    href={CONST.appInfo.contactUrl}
+                    href={CONST.APP_INFO.contactUrl}
                     className="text-white ml-10"
                   >
                     Contact
@@ -109,13 +109,13 @@ export function AuthPage() {
             {/* begin::Mobile footer */}
             <div className="d-flex d-lg-none flex-column-auto flex-column flex-sm-row justify-content-between align-items-center mt-5 p-5">
               <div className="text-dark-50 font-weight-bold order-2 order-sm-1 my-2">
-                &copy; 2020 {CONST.appInfo.name}
+                &copy; 2020 {CONST.APP_INFO.name}
               </div>
               <div className="d-flex order-1 order-sm-2 my-2">
                 <a
                   rel="noopener noreferrer"
                   target="_blank"
-                  href={CONST.appInfo.contactUrl}
+                  href={CONST.APP_INFO.contactUrl}
                   className="text-dark-75 text-hover-primary ml-4"
                 >
                   Contact

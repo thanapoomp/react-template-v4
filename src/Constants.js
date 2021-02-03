@@ -1,4 +1,4 @@
-export const appInfo = {
+export const APP_INFO = {
   name: 'Standard Demo',
   version: '0.1',
   since: '2020',
@@ -6,14 +6,14 @@ export const appInfo = {
   contactUrl: 'https://www.siamsmile.co.th'
 }
 
-export const apiUrl =
+export const API_URL =
   !process.env.NODE_ENV || process.env.NODE_ENV === "development"
     ? "http://uat.siamsmile.co.th:9188/api" //dev
     : // ?  "http://localhost:54821/api" //dev
       "http://uat.siamsmile.co.th:9188/api"; // Production
 
 
-export const roles = {
+export const ROLES = {
   user: 'user',
   Manager: 'Manager',
   admin: "Admin",

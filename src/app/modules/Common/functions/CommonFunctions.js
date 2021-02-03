@@ -5,7 +5,7 @@ import * as CONST from "../../../../Constants";
 export const getSubDistrictDetail = async (subDistrictId) => {
   let result;
   await axios
-    .get(`${CONST.apiUrl}/Workshop/subdistrictdetail/${subDistrictId}`)
+    .get(`${CONST.API_URL}/Workshop/subdistrictdetail/${subDistrictId}`)
     .then((res) => {
       result = {
         districtId: res.data.data.districtId,

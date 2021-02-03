@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as CONST from '../../../../Constants'
 import {encodeURLWithParams}  from '../../Common/components/ParamsEncode'
 
-const EMPLOYEE_URL = `${CONST.apiUrl}/Workshop/employee`
+const EMPLOYEE_URL = `${CONST.API_URL}/Workshop/employee`
 
 export const addEmployee = (payload) => {
   return axios.post(`${EMPLOYEE_URL}/add`, payload);

@@ -15,7 +15,7 @@ function Alert() {
   return (
     <Grid container direction="column" justify="center" alignItems="center">
       <Helmet>
-        <title>{CONST.appInfo.name} | Alert Demo</title>
+        <title>{CONST.APP_INFO.name} | Alert Demo</title>
       </Helmet>
       <a
         rel="noreferrer noopener"

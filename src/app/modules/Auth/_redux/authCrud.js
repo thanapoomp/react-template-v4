@@ -4,12 +4,12 @@ import jwt_decode from "jwt-decode";
 
 var dayjs = require("dayjs");
 
-export const LOGIN_URL = `${CONST.apiUrl}/Auth/login`;
+export const LOGIN_URL = `${CONST.API_URL}/Auth/login`;
 export const REGISTER_URL = `/Auth/register`;
 export const REQUEST_PASSWORD_URL = `api/auth/forgot-password`;
-export const RENEW_TOKEN_URL = `${CONST.apiUrl}/Auth/renew`
+export const RENEW_TOKEN_URL = `${CONST.API_URL}/Auth/renew`
 
-export const ME_URL = `${CONST.apiUrl}/Auth/renew`;
+export const ME_URL = `${CONST.API_URL}/Auth/renew`;
 
 export function login(username, password) {
   return axios.post(LOGIN_URL, { username, password });

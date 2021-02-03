@@ -16,9 +16,9 @@ function CaseCade(props) {
   const [districtList, setDistrictList] = React.useState([]);
   const [subDistrictList, setSubDistrictList] = React.useState([]);
 
-  const api_get_provoince_url = `${CONST.apiUrl}/Workshop/province`;
-  const api_get_district_url = `${CONST.apiUrl}/Workshop/district/`;
-  const api_get_subDistrict_url = `${CONST.apiUrl}/Workshop/subdistrict/`;
+  const api_get_provoince_url = `${CONST.API_URL}/Workshop/province`;
+  const api_get_district_url = `${CONST.API_URL}/Workshop/district/`;
+  const api_get_subDistrict_url = `${CONST.API_URL}/Workshop/subdistrict/`;
 
   React.useEffect(() => {
     //Load Province

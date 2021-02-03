@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl, checkIsActive } from "../../../../_helpers";
 import { useSelector } from "react-redux";
-import { roles } from "../../../../../Constants";
+import { ROLES } from "../../../../../Constants";
 import Hoc from "../../../../../app/modules/Common/components/Hoc";
 import DvrIcon from "@material-ui/icons/Dvr";
 import Icon from "@material-ui/core/Icon";
@@ -59,7 +59,7 @@ export function AsideMenuList({ layoutProps }) {
         {/* Demo zone สามารถ comment ทิ้งได้ */}
         <>
           {/* Custom roles */}
-          {isShowMenu([roles.developer, roles.Manager]) && (
+          {isShowMenu([ROLES.developer, ROLES.Manager]) && (
             <Hoc>
               {/* begin::section */}
               <li className="menu-section ">

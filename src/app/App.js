@@ -30,7 +30,7 @@ export default function App({ store, persistor, basename }) {
                 <Routes />
               </I18nProvider>
               <Helmet>
-                <title>{CONST.appInfo.name}</title>
+                <title>{CONST.APP_INFO.name}</title>
               </Helmet>
             </MaterialThemeProvider>
           </HashRouter>
