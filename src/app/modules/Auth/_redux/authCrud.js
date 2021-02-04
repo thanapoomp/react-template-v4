@@ -39,5 +39,8 @@ export function renewToken() {
 
 export function getRoles(token) {
   let decoded = jwt_decode(token);
+  if (!decoded.role) {
+    return []
+  }
   return decoded.role;
 }
