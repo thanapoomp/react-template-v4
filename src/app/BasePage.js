@@ -15,6 +15,9 @@ import WithDropdown from "./modules/_FormikDemo/pages/WithDropdown";
 import WithDatePicker from "./modules/_FormikDemo/pages/WithDatePicker";
 import NewEmployee from './modules/_EmployeeDemo/pages/NewEmployee'
 import EmployeeList from './modules/_EmployeeDemo/pages/EmployeeList'
+import UseFormikWithTextField from './modules/_FormikUseFormik/pages/WithTextField'
+import UseFormikWithDropdown from './modules/_FormikUseFormik/pages/WithDropdown'
+import WithAllComponents from "./modules/_FormikUseFormik/pages/WithAllComponents";
 
 export default function BasePage(props) {
   // useEffect(() => {
@@ -39,6 +42,9 @@ export default function BasePage(props) {
         <ContentRoute exact path="/employee/new" component={NewEmployee} />
         <ContentRoute exact path="/employee/edit/:id" component={NewEmployee} />
         <PrivateRoute exact path="/test" roles={[ROLES.admin,ROLES.developer]} component={Test} />
+        <ContentRoute exact path="/useFormik/textfield" component={UseFormikWithTextField} />
+        <ContentRoute exact path="/useFormik/dropdown" component={UseFormikWithDropdown} />
+        <ContentRoute exact path="/useFormik/all" component={WithAllComponents} />
         {/* End Demo part สามารถ comment ได้ */}
 
         <Route
