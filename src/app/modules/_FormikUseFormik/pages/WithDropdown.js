@@ -1,118 +1,146 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-imports */
-import React from "react";
+import React,{useEffect,useState} from "react";
 import { useFormik } from "formik";
 import {
   Grid,
   Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormHelperText,
-  TextField,
 } from "@material-ui/core/";
 import FormikDropdown from "../components/FormikDropdown";
-import FormikTextField from "../components/FormikTextField";
+import * as CONST from '../../../../Constants'
+import Axios from "axios";
 
 function WithDropdown(props) {
-  const [data, setData] = React.useState([]);
-  const [position, setPosition] = React.useState([
-    { id: 1, name: "employee" },
-    { id: 2, name: "boss" },
-  ]);
+  
+  const api_get_provoince_url = `${CONST.API_URL}/Workshop/province`;
+  const api_get_district_url = `${CONST.API_URL}/Workshop/district/`;
+  const api_get_subDistrict_url = `${CONST.API_URL}/Workshop/subdistrict/`;
 
-  React.useEffect(() => {
-    setData([
-      { id: 1, name: "Mr." },
-      { id: 2, name: "Mrs." },
-    ]);
-  }, []);
+  const [provinceList, setProvinceList] = React.useState([]);
+  const [districtList, setDistrictList] = React.useState([]);
+  const [subDistrictList, setSubDistrictList] = React.useState([]);
 
   const formik = useFormik({
     enableReinitialize: true,
     validate: (values) => {
       const errors = {};
-      if (!values.titleId) {
-        errors.titleId = "required";
-      }
-
-      if (!values.positionId) {
-        errors.positionId = "required";
-      }
 
       return errors;
     },
     initialValues: {
-      titleId: 0,
-      positionId: 0,
-      firstName: "",
+      provinceId: 0,
+      districtId: 0,
+      subDistrictId: 0
     },
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     },
   });
 
+  useEffect(() => {
+    //Load Province
+    Axios.get(api_get_provoince_url)
+      .then((res) => {
+        if (res.data.isSuccess) {
+          setProvinceList(res.data.data);
+        } else {
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  }, [])
+
+  React.useEffect(() => {
+    //Load District
+    if (formik.values.provinceId) {
+      Axios.get(api_get_district_url + formik.values.provinceId)
+        .then((res) => {
+          if (res.data.isSuccess) {
+            setDistrictList(res.data.data);
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+    }
+  }, [formik.values.provinceId]);
+
+  React.useEffect(() => {
+    //Load subDistrict
+    if (formik.values.districtId) {
+      Axios.get(api_get_subDistrict_url + formik.values.districtId)
+        .then((res) => {
+          if (res.data.isSuccess) {
+            setSubDistrictList(res.data.data);
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+    }
+  }, [
+    formik.values.provinceId,
+    formik.values.districtId,
+  ]);
+
   return (
     <form onSubmit={formik.handleSubmit}>
 
       <Grid container spacing={3}>
-        {/* Start Title */}
-        <Grid item xs={12} lg={3}>
-          <FormControl
-            fullWidth
-            error={formik.errors.titleId && formik.touched.titleId}
-          >
-            <InputLabel id="titleID">Title</InputLabel>
-            <Select
-              labelId="titleId"
-              name="titleId"
-              value={formik.values.titleId}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-            >
-              <MenuItem disabled value={0}>
-                <em>Select Title</em>
-              </MenuItem>
-              {data.map((item) => (
-                <MenuItem key={`titleId_${item.id}`} value={item.id}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </Select>
-            {formik.errors.titleId && formik.touched.titleId && (
-              <FormHelperText>{formik.errors.titleId}</FormHelperText>
-            )}
-          </FormControl>
-        </Grid>
-        {/* End Title */}
 
-        {/* Start position */}
+        {/* Province */}
         <Grid item xs={12} lg={3}>
           <FormikDropdown
             formik={formik}
-            name="positionId"
-            label="Position"
-            data={position}
-            valueFieldName="id"
-            displayFieldName="name"
-            firstItemText="Select Position"
-            disableFirstItem={true}
-            selectedCallback={(value) => {
-              alert("you select: " + value);
+            name="provinceId"
+            label="Province"
+            data={provinceList}
+            firstItemText="Select Province"
+            valueFieldName="provinceId"
+            displayFieldName="provinceName"
+            selectedCallback={() => {
+              formik.setFieldValue('districtId',0).then(() => {
+                formik.setFieldValue('subDistrictId',0)
+              })
             }}
           />
         </Grid>
-        {/* Start position */}
 
-        {/* Start firstName */}
-        <Grid item xs={12} lg={3}>
-          <FormikTextField
+         {/* District */}
+         <Grid item xs={12} lg={3}>
+          <FormikDropdown
             formik={formik}
-            name="firstName"
-            label="First Name"
+            name="districtId"
+            label="District"
+            data={districtList}
+            firstItemText="Select District"
+            valueFieldName="districtId"
+            displayFieldName="districtName"
+            selectedCallback={() => {
+              formik.setFieldValue('subDistrictId',0)
+            }}
           />
         </Grid>
 
+         {/* SubDistrict */}
+         <Grid item xs={12} lg={3}>
+          <FormikDropdown
+            formik={formik}
+            name="subDistrictId"
+            label="SubDistrict"
+            data={subDistrictList}
+            firstItemText="Select SubDistrict"
+            valueFieldName="subDistrictId"
+            displayFieldName="subDistrictName"
+          />
+        </Grid>
+        
         <Grid item xs={12} lg={3}>
           <Button type="submit" fullWidth variant="contained">
             Submit
