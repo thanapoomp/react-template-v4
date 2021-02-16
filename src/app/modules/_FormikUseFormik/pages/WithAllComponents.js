@@ -10,6 +10,8 @@ import FormikSlider from "../components/FormikSlider";
 import FormikRating from "../components/FormikRating";
 import FormikRadioGroup from "../components/FormikRadioGroup";
 import FormikCheckBoxGroup from '../components/FormikCheckBoxGroup'
+import FormikDatePicker from "../components/FormikDatePicker";
+var dayjs = require("dayjs");
 
 function WithTextField() {
   const [title, setTitle] = React.useState([
@@ -29,7 +31,9 @@ function WithTextField() {
     {id: 3,name: 'Jogging'}
   ])
 
-  React.useEffect(() => {}, []);
+  const [today, setToday] = React.useState(
+    dayjs(new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate()))
+  )
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -49,7 +53,8 @@ function WithTextField() {
       score: 2,
       rating: 5,
       genderId: 0,
-      hobbies:[2]
+      hobbies:[2],
+      birthDate: today
     },
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
@@ -57,6 +62,7 @@ function WithTextField() {
   });
 
   return (
+
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={3}>
         {/* Title */}
@@ -82,6 +88,11 @@ function WithTextField() {
         {/* Start lastname */}
         <Grid item xs={12} lg={3}>
           <FormikTextField formik={formik} name="lastName" label="Last Name" />
+        </Grid>
+
+                {/* Start birthDate */}
+                <Grid item xs={12} lg={3}>
+          <FormikDatePicker formik={formik} name="birthDate" label="BirthDate" />
         </Grid>
 
         {/* Gender */}

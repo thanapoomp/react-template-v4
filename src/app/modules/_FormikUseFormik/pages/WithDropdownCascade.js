@@ -10,7 +10,7 @@ import FormikDropdown from "../components/FormikDropdown";
 import * as CONST from '../../../../Constants'
 import Axios from "axios";
 
-function WithDropdown(props) {
+function WithDropdownCascade(props) {
   
   const api_get_provoince_url = `${CONST.API_URL}/Workshop/province`;
   const api_get_district_url = `${CONST.API_URL}/Workshop/district/`;
@@ -53,21 +53,29 @@ function WithDropdown(props) {
   }, [])
 
   React.useEffect(() => {
-    //Load District
-    if (formik.values.provinceId) {
-      Axios.get(api_get_district_url + formik.values.provinceId)
-        .then((res) => {
-          if (res.data.isSuccess) {
-            setDistrictList(res.data.data);
-          } else {
-            alert(res.data.message);
-          }
-        })
-        .catch((err) => {
-          alert(err.message);
-        });
-    }
+    //Clear District
+    formik.setFieldValue("districtId", 0).then(() => {
+      //Load District
+      if (formik.values.provinceId) {
+        Axios.get(api_get_district_url + formik.values.provinceId)
+          .then((res) => {
+            if (res.data.isSuccess) {
+              setDistrictList(res.data.data);
+            } else {
+              alert(res.data.message);
+            }
+          })
+          .catch((err) => {
+            alert(err.message);
+          });
+      }
+    });
   }, [formik.values.provinceId]);
+
+  useEffect(() => {
+    //Clear SubDistrict
+    formik.setFieldValue("subDistrictId", 0);
+  }, [formik.values.districtId]);
 
   React.useEffect(() => {
     //Load subDistrict
@@ -104,11 +112,6 @@ function WithDropdown(props) {
             firstItemText="Select Province"
             valueFieldName="provinceId"
             displayFieldName="provinceName"
-            selectedCallback={() => {
-              formik.setFieldValue('districtId',0).then(() => {
-                formik.setFieldValue('subDistrictId',0)
-              })
-            }}
           />
         </Grid>
 
@@ -122,9 +125,6 @@ function WithDropdown(props) {
             firstItemText="Select District"
             valueFieldName="districtId"
             displayFieldName="districtName"
-            selectedCallback={() => {
-              formik.setFieldValue('subDistrictId',0)
-            }}
           />
         </Grid>
 
@@ -157,4 +157,4 @@ function WithDropdown(props) {
   );
 }
 
-export default WithDropdown;
+export default WithDropdownCascade;
