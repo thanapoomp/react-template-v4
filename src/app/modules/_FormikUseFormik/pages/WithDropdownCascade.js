@@ -1,17 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-imports */
-import React,{useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import {
-  Grid,
-  Button,
-} from "@material-ui/core/";
+import { Grid, Button } from "@material-ui/core/";
 import FormikDropdown from "../components/FormikDropdown";
-import * as CONST from '../../../../Constants'
+import * as CONST from "../../../../Constants";
 import Axios from "axios";
 
 function WithDropdownCascade(props) {
-  
   const api_get_provoince_url = `${CONST.API_URL}/Workshop/province`;
   const api_get_district_url = `${CONST.API_URL}/Workshop/district/`;
   const api_get_subDistrict_url = `${CONST.API_URL}/Workshop/subdistrict/`;
@@ -28,16 +24,16 @@ function WithDropdownCascade(props) {
       return errors;
     },
     initialValues: {
-      provinceId: 0,
-      districtId: 0,
-      subDistrictId: 0
+      provinceId: 1,
+      districtId: 2,
+      subDistrictId: 4,
     },
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     },
   });
 
-  useEffect(() => {
+  const loadProvince = () => {
     //Load Province
     Axios.get(api_get_provoince_url)
       .then((res) => {
@@ -50,58 +46,53 @@ function WithDropdownCascade(props) {
       .catch((err) => {
         alert(err.message);
       });
-  }, [])
+  };
+
+  const loadDistrict = () => {
+    //Load District
+    Axios.get(api_get_district_url + formik.values.provinceId)
+      .then((res) => {
+        if (res.data.isSuccess) {
+          setDistrictList(res.data.data);
+        } else {
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
+
+  const loadSubDistrict = () => {
+    //Load subDistrict
+    Axios.get(api_get_subDistrict_url + formik.values.districtId)
+      .then((res) => {
+        if (res.data.isSuccess) {
+          setSubDistrictList(res.data.data);
+        } else {
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
 
   React.useEffect(() => {
-    //Clear District
-    formik.setFieldValue("districtId", 0).then(() => {
-      //Load District
-      if (formik.values.provinceId) {
-        Axios.get(api_get_district_url + formik.values.provinceId)
-          .then((res) => {
-            if (res.data.isSuccess) {
-              setDistrictList(res.data.data);
-            } else {
-              alert(res.data.message);
-            }
-          })
-          .catch((err) => {
-            alert(err.message);
-          });
-      }
-    });
+    loadProvince();
+  }, []);
+
+  React.useEffect(() => {
+    loadDistrict();
   }, [formik.values.provinceId]);
 
-  useEffect(() => {
-    //Clear SubDistrict
-    formik.setFieldValue("subDistrictId", 0);
-  }, [formik.values.districtId]);
-
   React.useEffect(() => {
-    //Load subDistrict
-    if (formik.values.districtId) {
-      Axios.get(api_get_subDistrict_url + formik.values.districtId)
-        .then((res) => {
-          if (res.data.isSuccess) {
-            setSubDistrictList(res.data.data);
-          } else {
-            alert(res.data.message);
-          }
-        })
-        .catch((err) => {
-          alert(err.message);
-        });
-    }
-  }, [
-    formik.values.provinceId,
-    formik.values.districtId,
-  ]);
+    loadSubDistrict();
+  }, [formik.values.provinceId, formik.values.districtId]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
-
       <Grid container spacing={3}>
-
         {/* Province */}
         <Grid item xs={12} lg={3}>
           <FormikDropdown
@@ -112,11 +103,16 @@ function WithDropdownCascade(props) {
             firstItemText="Select Province"
             valueFieldName="provinceId"
             displayFieldName="provinceName"
+            selectedCallback={() => {
+              formik.setFieldValue("districtId", 0).then(() => {
+                formik.setFieldValue("subDistrictId", 0);
+              });
+            }}
           />
         </Grid>
 
-         {/* District */}
-         <Grid item xs={12} lg={3}>
+        {/* District */}
+        <Grid item xs={12} lg={3}>
           <FormikDropdown
             formik={formik}
             name="districtId"
@@ -125,11 +121,14 @@ function WithDropdownCascade(props) {
             firstItemText="Select District"
             valueFieldName="districtId"
             displayFieldName="districtName"
+            selectedCallback={(val) => {
+              formik.setFieldValue("subDistrictId", 0);
+            }}
           />
         </Grid>
 
-         {/* SubDistrict */}
-         <Grid item xs={12} lg={3}>
+        {/* SubDistrict */}
+        <Grid item xs={12} lg={3}>
           <FormikDropdown
             formik={formik}
             name="subDistrictId"
@@ -140,7 +139,7 @@ function WithDropdownCascade(props) {
             displayFieldName="subDistrictName"
           />
         </Grid>
-        
+
         <Grid item xs={12} lg={3}>
           <Button type="submit" fullWidth variant="contained">
             Submit

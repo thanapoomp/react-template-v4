@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-imports */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from "prop-types";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -9,21 +9,16 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 function FormikAutoComplete(props){
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
-  const loading = open && options.length === 0;
+  const [loading, setLoading] = useState(false)
+  const [searchText, setSearchText] = React.useState('')
 
   React.useEffect(() => {
-    let active = true;
-
-    if (!loading) {
-      return undefined;
-    }
+    setLoading(true)
     props
-      .axiosGet()
+      .axiosGet(searchText)
       .then((res) => {
         if (res.data.isSuccess) {
-          if (active) {
             setOptions(res.data.data);
-          }
         } else {
           alert(res.data.message);
         }
@@ -31,17 +26,17 @@ function FormikAutoComplete(props){
       .catch((err) => {
         alert(err.message);
       });
-
-    return () => {
-      active = false;
-    };
-  }, [loading]);
+  }, [searchText]);
 
   React.useEffect(() => {
     if (!open) {
       setOptions([]);
     }
   }, [open]);
+
+  useEffect(() => {
+    setLoading(false)
+  }, [options])
 
   return (
     <Autocomplete
@@ -58,10 +53,19 @@ function FormikAutoComplete(props){
       value={props.formik.values[`${props.name}`]}
       getOptionLabel={(option) => option[props.displayFieldName]}
       onChange={(event, value) => {
+        if (value) {
         props.formik.setFieldValue(props.name, {[props.valueFieldName]: value[props.valueFieldName],[props.displayFieldName]: value[props.displayFieldName]});
+        }else{
+          props.formik.setFieldValue(props.name, {[props.valueFieldName]: null,[props.displayFieldName]: null});
+        }
       }}
       options={options}
       loading={loading}
+      noOptionsText="ไม่พบข้อมูล"
+      loadingText="กำลังค้นหา"
+      onInputChange={(event,value,reason)=>{
+        setSearchText(value)
+      }}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -81,7 +85,6 @@ function FormikAutoComplete(props){
           onBlur={() => {
             props.formik.setFieldTouched([`${props.name}`], true, true);
           }}
-
           label={props.label}
           value={props.formik.values[`${props.name}`]}
           InputProps={{
@@ -116,7 +119,7 @@ FormikAutoComplete.propTypes = {
     formik: {},
     name: "Do not forget to set name",
     label: "Do not forget to set label",
-    axiosGet: () => {},
+    axiosGet: () => {},//axios ตัวอย่าง getProduct(searchValue)
     valueFieldName: "id",
     displayFieldName: "name",
     disabled: false,

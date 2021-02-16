@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-imports */
 import React from "react";
 import { useFormik } from "formik";
@@ -41,8 +42,7 @@ function WithTextField() {
       )
   );
 
-  const [relatedEmployee, setRelatedEmployee] = React.useState({id: "81168bd9-f5aa-4196-380f-08d8b9259c08", firstName: 'string2' })
-
+  const [relatedEmployee, setRelatedEmployee] = React.useState({id: "", firstName: '' })
 
   React.useEffect(() => {
     // getRelatedEmployee
@@ -60,8 +60,8 @@ function WithTextField() {
     })
   }, [])
 
-  const loadEmployee = () => {
-    return employeeAxios.getEmployeeFilter('firstName',true,1,50,'','','')
+  const loadEmployee = (firstName) => {
+    return employeeAxios.getEmployeeFilter('firstName',true,1,50,'',firstName,'')
   }
 
   const formik = useFormik({
@@ -71,6 +71,11 @@ function WithTextField() {
       if (!values.titleId) {
         errors.titleId = "required";
       }
+
+      if (!values.firstName) {
+        errors.firstName='Required'
+      }
+
       return errors;
     },
     initialValues: {
