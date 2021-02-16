@@ -9,9 +9,12 @@ import FormikCheckBox from "../components/FormikCheckBox";
 import FormikSlider from "../components/FormikSlider";
 import FormikRating from "../components/FormikRating";
 import FormikRadioGroup from "../components/FormikRadioGroup";
-import FormikCheckBoxGroup from '../components/FormikCheckBoxGroup'
+import FormikCheckBoxGroup from "../components/FormikCheckBoxGroup";
 import FormikDatePicker from "../components/FormikDatePicker";
-var dayjs = require("dayjs");
+import FormikDateTimePicker from "../components/FormikDateTimePicker";
+import FormikTimePicker from "../components/FormikTimePicker";
+import FormikAutoComplete from "../components/FormikAutoComplete";
+import * as employeeAxios from '../../_EmployeeDemo/_redux/employeeAxios'
 
 function WithTextField() {
   const [title, setTitle] = React.useState([
@@ -20,20 +23,46 @@ function WithTextField() {
   ]);
 
   const [gender, setGender] = React.useState([
-    {id: '1',name: 'Male'},
-    {id: '2',name: 'Female'},
-    {id: '3',name: 'Unknown'}
-  ])
+    { id: "1", name: "Male" },
+    { id: "2", name: "Female" },
+    { id: "3", name: "Unknown" },
+  ]);
 
   const [hobby, setHobby] = React.useState([
-    {id: 1,name: 'Games'},
-    {id: 2,name: 'Shopping'},
-    {id: 3,name: 'Jogging'}
-  ])
+    { id: 1, name: "Games" },
+    { id: 2, name: "Shopping" },
+    { id: 3, name: "Jogging" },
+  ]);
 
-  const [today, setToday] = React.useState(
-    dayjs(new Date(new Date().getFullYear(),new Date().getMonth() , new Date().getDate()))
-  )
+  const [today, setToday] = React.useState(new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        new Date().getDate()
+      )
+  );
+
+  const [relatedEmployee, setRelatedEmployee] = React.useState({id: "81168bd9-f5aa-4196-380f-08d8b9259c08", firstName: 'string2' })
+
+
+  React.useEffect(() => {
+    // getRelatedEmployee
+    let id = 'e1b57a9c-23e3-409f-1c6a-08d8bcedf819'
+    employeeAxios.getEmployee(id)
+    .then((res)=>{
+      if (res.data.isSuccess) {
+        setRelatedEmployee({...relatedEmployee,id:res.data.data.id,firstName:res.data.data.firstName})
+      }else(
+        alert(res.data.message)
+      )
+    })
+    .catch((err) => {
+      alert(err.message)
+    })
+  }, [])
+
+  const loadEmployee = () => {
+    return employeeAxios.getEmployeeFilter('firstName',true,1,50,'','','')
+  }
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -53,8 +82,11 @@ function WithTextField() {
       score: 2,
       rating: 5,
       genderId: 0,
-      hobbies:[2],
-      birthDate: today
+      hobbies: [2],
+      birthDate: today,
+      nextMeeting: today,
+      breakfastTime: today,
+      relatedToEmployee: relatedEmployee
     },
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
@@ -62,7 +94,6 @@ function WithTextField() {
   });
 
   return (
-
     <form onSubmit={formik.handleSubmit}>
       <Grid container spacing={3}>
         {/* Title */}
@@ -90,9 +121,31 @@ function WithTextField() {
           <FormikTextField formik={formik} name="lastName" label="Last Name" />
         </Grid>
 
-                {/* Start birthDate */}
-                <Grid item xs={12} lg={3}>
-          <FormikDatePicker formik={formik} name="birthDate" label="BirthDate" />
+        {/* Start birthDate */}
+        <Grid item xs={12} lg={3}>
+          <FormikDatePicker
+            formik={formik}
+            name="birthDate"
+            label="BirthDate"
+          />
+        </Grid>
+
+        {/* Start nextMeeting */}
+        <Grid item xs={12} lg={3}>
+          <FormikDateTimePicker
+            formik={formik}
+            name="nextMeeting"
+            label="Next Meeting"
+          />
+        </Grid>
+
+        {/* Start breakfastTime */}
+        <Grid item xs={12} lg={3}>
+          <FormikTimePicker
+            formik={formik}
+            name="breakfastTime"
+            label="Breakfast Time:"
+          />
         </Grid>
 
         {/* Gender */}
@@ -139,10 +192,18 @@ function WithTextField() {
 
         {/* rating */}
         <Grid item xs={12} lg={3}>
-          <FormikRating
+          <FormikRating formik={formik} name="rating" label="Rating" />
+        </Grid>
+
+        {/* relatedToEmployee */}
+        <Grid item xs={12} lg={3}>
+          <FormikAutoComplete
           formik={formik}
-          name="rating"
-          label="Rating"
+          name="relatedToEmployee"
+          label="Related"
+          axiosGet={loadEmployee.bind(this)}
+          valueFieldName="id"
+          displayFieldName="firstName"
           />
         </Grid>
 

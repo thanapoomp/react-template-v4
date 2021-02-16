@@ -27,6 +27,9 @@ function FormikRadioGroup(props) {
             props.formik
             .setFieldValue(props.name, event.target.value)
         }}
+        onBlur={() => {
+          props.formik.setFieldTouched([`${props.name}`], true, true) 
+        }}
       >
         {props.data.map((item) => (
           <FormControlLabel

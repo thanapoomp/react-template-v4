@@ -10,6 +10,9 @@ function FormikRating(props) {
         <Typography component="legend">{props.label}</Typography>
         <Rating
           name="simple-controlled"
+          onBlur={() => {
+            props.formik.setFieldTouched([`${props.name}`], true, true) 
+          }}
           onChange={(event, value) => {
             props.formik.setFieldValue(props.name, value);
           }}

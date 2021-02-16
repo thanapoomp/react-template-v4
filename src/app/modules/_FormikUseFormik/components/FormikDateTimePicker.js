@@ -1,18 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { DatePicker } from "@material-ui/pickers";
+import { KeyboardDateTimePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DayJsUtils from "@date-io/dayjs";
 
-function FormikDatePicker(props) {
+function FormikDateTimePicker(props) {
   return (
     <MuiPickersUtilsProvider utils={DayJsUtils} locale="th">
-      <DatePicker
+      <KeyboardDateTimePicker
         fullWidth
         name={props.name}
-        format="DD/MM/YYYY"
+        variant="inline"
+        ampm={false}
         label={props.label}
-        views={["year", "month", "date"]}
         value={props.formik.values[`${props.name}`]}
         onChange={(value) => {
           props.formik.setFieldValue(props.name, value);
@@ -22,34 +22,37 @@ function FormikDatePicker(props) {
           props.formik.touched[`${props.name}`]
         }
         onBlur={() => {
-          props.formik.setFieldTouched([`${props.name}`], true, true) 
+          props.formik.setFieldTouched([`${props.name}`], true, true);
         }}
         helperText={props.formik.errors[`${props.name}`]}
+        onError={console.log}
         disabled={props.disabled}
         disableFuture={props.disableFuture}
         disablePast={props.disablePast}
+        format="DD/MM/YYYY HH:mm"
+        autoOk
       />
     </MuiPickersUtilsProvider>
   );
 }
 
-FormikDatePicker.propTypes = {
-    formik: PropTypes.object,
-    name: PropTypes.string,
-    label: PropTypes.string,
-    disabled: PropTypes.bool,
-    disableFuture: PropTypes.bool,
-    disablePast: PropTypes.bool
-  };
-  
-  // Same approach for defaultProps too
-  FormikDatePicker.defaultProps = {
-    formik: {},
-    name: "Do not forget to set name",
-    label: "Do not forget to set label",
-    disabled: false,
-    disableFuture: false,
-    disablePast: false
-  };
+FormikDateTimePicker.propTypes = {
+  formik: PropTypes.object,
+  name: PropTypes.string,
+  label: PropTypes.string,
+  disabled: PropTypes.bool,
+  disableFuture: PropTypes.bool,
+  disablePast: PropTypes.bool,
+};
 
-export default FormikDatePicker;
+// Same approach for defaultProps too
+FormikDateTimePicker.defaultProps = {
+  formik: {},
+  name: "Do not forget to set name",
+  label: "Do not forget to set label",
+  disabled: false,
+  disableFuture: false,
+  disablePast: false,
+};
+
+export default FormikDateTimePicker;

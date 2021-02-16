@@ -36,6 +36,9 @@ function FormikSlider(props) {
       </Typography>
       <Slider
         name={props.name}
+        onBlur={() => {
+          props.formik.setFieldTouched([`${props.name}`], true, true) 
+        }}
         onChange={(event, value) => {
           props.formik.setFieldValue(props.name, value);
         }}

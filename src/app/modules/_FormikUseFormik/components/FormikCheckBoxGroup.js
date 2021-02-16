@@ -21,6 +21,9 @@ function FormikCheckBoxGroup(props) {
         <FormGroup row>
           {props.data.map((item) => (
               <FormControlLabel
+              onBlur={() => {
+                props.formik.setFieldTouched([`${props.name}`], true, true) 
+              }}
                 key={`${props.name}_${item[`${props.valueFieldName}`]}`}
                 control={
                   <Checkbox
