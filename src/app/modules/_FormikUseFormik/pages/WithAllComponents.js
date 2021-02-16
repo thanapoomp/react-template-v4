@@ -209,6 +209,7 @@ function WithTextField() {
           axiosGet={loadEmployee.bind(this)}
           valueFieldName="id"
           displayFieldName="firstName"
+          minSearchLen={3}
           />
         </Grid>
 
